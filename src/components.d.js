@@ -9,5 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    WdImg: typeof import('wot-design-uni/components/wd-img/wd-img.vue')['WdImg']
+    WdText: typeof import('wot-design-uni/components/wd-text/wd-text.vue')['WdText']
   }
 }

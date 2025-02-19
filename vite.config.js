@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import AutoImport from 'unplugin-auto-import/vite'          //自动按需引入 vue\vue-router\pinia\vueuse 等的api
 import Components from 'unplugin-vue-components/vite'     //自动按需引入 第三方的组件库组件 和 我们自定义的组件
-import { WotResolver } from '@uni-helper/vite-plugin-uni-components/resolvers'
+
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -23,13 +23,20 @@ export default defineConfig({
 			// imports 指定组件所在位置，默认为 src/components
 			dirs: ['src/components/'],
 			// 自动导入组件
-			resolvers: [WotResolver()]
+			resolvers: []
 		}),
 	],
 	resolve: {
 		alias: {
 			'@': fileURLToPath(new URL('./src', import.meta.url))
 		},
+	},
+	css: {
+		preprocessorOptions: {
+			scss: {
+				additionalData: `@import "@/styles/reset.scss";`
+			}
+		}
 	},
 	server: {
 		port: 5173, // 服务端口号
@@ -47,6 +54,6 @@ export default defineConfig({
 				rewrite: (path) => path.replace('/xhs', '')
 			}
 		},
-		allowedHosts: ['c3zhpdhi-9hbrh3c1-hdp30bwzsg70.vcb4.mcprev.cn','ge677vwx-0jq6o8jf-u4z5bx5edel.vcb4.mcprev.cn']
+		allowedHosts: ['d65ope0m-ebti5z6n-nznsuvc9arsp.vcb4.mcprev.cn']
 	}
 })

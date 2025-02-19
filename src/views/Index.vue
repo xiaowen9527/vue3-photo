@@ -47,11 +47,17 @@ const getData = () => {
 	})
 }
 getData()
+
+
+const pic = 'https://pic1.imgdb.cn/item/67b5a56cd0e0a243d400c644.jpg'
 </script>
 
 <template>
-	<div>
-		index
+	<div class="container">
+		<div class="item">
+			<img class="item-img" :src="pic" />
+			<text class="item-tle" text="芦叶满汀洲"></text>
+		</div>
 	</div>
 </template>
 
