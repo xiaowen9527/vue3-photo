@@ -31,13 +31,6 @@ export default defineConfig({
 			'@': fileURLToPath(new URL('./src', import.meta.url))
 		},
 	},
-	css: {
-		preprocessorOptions: {
-			scss: {
-				additionalData: `@import "@/styles/reset.scss";`
-			}
-		}
-	},
 	server: {
 		port: 5173, // 服务端口号
 		open: false, // 服务启动时是否自动打开浏览器
@@ -54,6 +47,6 @@ export default defineConfig({
 				rewrite: (path) => path.replace('/xhs', '')
 			}
 		},
-		allowedHosts: ['d65ope0m-ebti5z6n-nznsuvc9arsp.vcb4.mcprev.cn']
+		allowedHosts: ['fht5vhy9-zdu0drmr-xseisyamgzae.vcb4.mcprev.cn']
 	}
 })

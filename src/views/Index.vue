@@ -55,10 +55,18 @@ const pic = 'https://pic1.imgdb.cn/item/67b5a56cd0e0a243d400c644.jpg'
 <template>
 	<div class="container">
 		<div class="item">
-			<img class="item-img" :src="pic" />
-			<text class="item-tle" text="芦叶满汀洲"></text>
+			<div class="item-img"></div>
+			<!-- <img class="item-img" :src="pic" /> -->
+			<!-- <text class="item-tle" text="芦叶满汀洲"></text> -->
 		</div>
 	</div>
 </template>
 
-<style lang='scss' scoped></style>
+<style lang='scss' scoped>
+.item{
+	.item-img{
+		width: 170px;
+		height: 226px;
+	}
+}
+</style>

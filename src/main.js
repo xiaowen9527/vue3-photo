@@ -6,6 +6,8 @@ import App from './App.vue'
 import router from './router'
 import Api from "@/api/axios";
 
+import './styles/reset.scss' // 引入 reset.scss
+
 const app = createApp(App)
 
 app.use(createPinia())
