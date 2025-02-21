@@ -55,7 +55,7 @@ const getNotes = () => {
 						// 当notesData的长度等于notesLength时，说明已经获取到所有用户的笔记合集
 						if (notesData.value.length == notesLength.value) {
 							loading.value = false
-							console.log('获取所有用户的笔记合集成功');
+							console.log(notesData.value,'获取所有用户的笔记合集成功');
 						}
 					}
 				}
@@ -77,12 +77,12 @@ const pic = 'https://pic1.imgdb.cn/item/67b5a56cd0e0a243d400c644.jpg'
 
 <template>
 	<div class="container list">
-		<div class="item" v-for="(item, i) in 10" :key="i">
+		<!-- <div class="item" v-for="(item, i) in 10" :key="i">
 			<div class="item-img">
-				<!-- <img class="item-img" :src="pic" /> -->
+				<img class="item-img" :src="pic" />
 			</div>
 			<span class="item-tle">芦叶满汀洲芦叶满汀洲芦叶满汀洲芦叶满汀洲芦叶满汀洲芦叶满汀洲芦叶满汀洲芦叶满汀洲</span>
-		</div>
+		</div> -->
 	</div>
 </template>
 
