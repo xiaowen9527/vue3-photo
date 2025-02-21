@@ -11,6 +11,12 @@ dependencies:
   pinia:
     specifier: ^2.3.1
     version: 2.3.1(vue@3.5.13)
+  postcss:
+    specifier: ^8.5.3
+    version: 8.5.3
+  postcss-px-conversion:
+    specifier: ^0.1.4
+    version: 0.1.4(postcss@8.5.3)
   qs:
     specifier: ^6.14.0
     version: 6.14.0
@@ -902,7 +908,7 @@ packages:
       '@vue/shared': 3.5.13
       estree-walker: 2.0.2
       magic-string: 0.30.17
-      postcss: 8.5.2
+      postcss: 8.5.3
       source-map-js: 1.2.1
 
   /@vue/compiler-ssr@3.5.13:
@@ -1726,8 +1732,17 @@ packages:
       pathe: 2.0.2
     dev: true
 
-  /postcss@8.5.2:
-    resolution: {integrity: sha512-MjOadfU3Ys9KYoX0AdkBlFEF1Vx37uCCeN4ZHnmwm9FfpbsGWMZeBLMmmpY+6Ocqod7mkdZ0DT31OlbsFrLlkA==}
+  /postcss-px-conversion@0.1.4(postcss@8.5.3):
+    resolution: {integrity: sha512-nW9qYtcW9p1H6Hv3x3qeaRvvet+GBM1lUz/qKPf6k+09EMnCnSEFLunuJmUXGW+fOIypYKPbkBZxRcWrDxuXPg==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      postcss: '>=8.0.0'
+    dependencies:
+      postcss: 8.5.3
+    dev: false
+
+  /postcss@8.5.3:
+    resolution: {integrity: sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.8
@@ -2407,7 +2422,7 @@ packages:
         optional: true
     dependencies:
       esbuild: 0.24.2
-      postcss: 8.5.2
+      postcss: 8.5.3
       rollup: 4.34.6
       sass-embedded: 1.85.0
     optionalDependencies:

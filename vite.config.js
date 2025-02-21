@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import AutoImport from 'unplugin-auto-import/vite'          //自动按需引入 vue\vue-router\pinia\vueuse 等的api
 import Components from 'unplugin-vue-components/vite'     //自动按需引入 第三方的组件库组件 和 我们自定义的组件
-
+import postcssPxConversion from 'postcss-px-conversion';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -26,6 +26,19 @@ export default defineConfig({
 			resolvers: []
 		}),
 	],
+	css: {
+		postcss: {
+			plugins: [
+				postcssPxConversion({
+					unitType: "px", // 要从哪种单位转换（默认为'px'）
+					viewportWidth: 375,
+					unitPrecision: 10,
+					viewportUnit: "vw",
+					minPixelValue: 1,
+				}),
+			],
+		},
+	},
 	resolve: {
 		alias: {
 			'@': fileURLToPath(new URL('./src', import.meta.url))
@@ -47,6 +60,6 @@ export default defineConfig({
 				rewrite: (path) => path.replace('/xhs', '')
 			}
 		},
-		allowedHosts: ['fht5vhy9-zdu0drmr-xseisyamgzae.vcb4.mcprev.cn']
+		allowedHosts: ['cg1nu2r1-zqtph8ki-z7q3heszfzd8.vcb4.mcprev.cn']
 	}
 })
