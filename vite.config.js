@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import AutoImport from 'unplugin-auto-import/vite'          //自动按需引入 vue\vue-router\pinia\vueuse 等的api
 import Components from 'unplugin-vue-components/vite'     //自动按需引入 第三方的组件库组件 和 我们自定义的组件
+import { VantResolver } from '@vant/auto-import-resolver';
 import postcssPxConversion from 'postcss-px-conversion';
 
 // https://vite.dev/config/
@@ -17,13 +18,14 @@ export default defineConfig({
 			dts: './src/auto-imports.d.js',
 			imports: ['vue', 'pinia', 'vue-router'],
 			vueTemplate: true, // 是否在 vue 模板中自动导入
+			resolvers: [VantResolver()],
 		}),
 		Components({
 			dts: './src/components.d.js',
 			// imports 指定组件所在位置，默认为 src/components
 			dirs: ['src/components/'],
 			// 自动导入组件
-			resolvers: []
+			resolvers: [VantResolver()],
 		}),
 	],
 	css: {
@@ -60,6 +62,6 @@ export default defineConfig({
 				rewrite: (path) => path.replace('/xhs', '')
 			}
 		},
-		allowedHosts: ['cg1nu2r1-zqtph8ki-z7q3heszfzd8.vcb4.mcprev.cn']
+		allowedHosts: ['elwxswzz-cmsa4s95-gbo4oqw08ua.vcb4.mcprev.cn']
 	}
 })
