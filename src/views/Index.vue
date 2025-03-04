@@ -84,19 +84,22 @@
                         }
                         notesDatas.value.push(obj)
                     })
+
+                    console.log(notesDatas.value, '数据得长度');
+                    
                 }
 
-                // // 判断是否全部加载完了
-                // if (notesDatas.value.length == (currIndex.value + 1) * count.value * 6) {
-                //     console.log(notesDatas.value.length,'数据得长度111');
-                //     console.log((currIndex.value + 1) * count.value * 6,'数据得长度222');
-
-                // }
+                // 判断是否全部加载完了
+                if (notesDatas.value.length == (currIndex.value + 1) * count.value * 6) {
+                    console.log(notesDatas.value.length, '数据得长度111');
+                    console.log((currIndex.value + 1) * count.value * 6, '数据得长度222');
+                    finished.value = true
+                } else {
+                    currIndex.value += 1
+                }
             }
         }
     }
-
-
 
     onMounted(() => {
         getListId()
@@ -106,7 +109,7 @@
 
 <template>
     <!-- 骨架屏加载中 -->
-    <van-skeleton v-if="loading">
+    <van-skeleton v-if="!notesDatas.length">
         <template #template>
             <div class="caontainer skeleton-container">
                 <div class="item" v-for="(item, i) in 10" :key="i">
@@ -118,30 +121,21 @@
             </div>
         </template>
     </van-skeleton>
+
     <!-- 显示数据 -->
     <div class="container list" v-else>
-        <!-- <div class="container list"> -->
-        <!-- <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-			<van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"> -->
+
         <div class="item" v-for="(item, i) in notesDatas" :key="i" @click="getNotes">
             <div class="item-img">
-                <!-- <img class="item-img" :src="item.cover" /> -->
+                <img class="item-img" :src="item.cover" />
             </div>
             <div class="user">
                 <img class="user-avatar" :src="item.avatar" />
                 <span class="item-tle">{{ item.title }}</span>
             </div>
         </div>
-        <!-- </van-list>
-		</van-pull-refresh> -->
+
     </div>
-
-
-    <!-- <div :style="{ display: 'flex', width: '100%' }">
-		<van-skeleton-image />
-		<van-skeleton-image />
-	</div> -->
-
 </template>
 
 <style lang='scss' scoped>
