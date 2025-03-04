@@ -15,13 +15,17 @@ const refreshing = ref(false);
 
 // 获取笔记合集的拼接参数
 const params = '?xsec_token=ABT7hRcLlGk-rZAIX1JnYYRvGmVEDMi0Txvx3m3ModAA8=&xsec_source=pc_feed'
-
+// cosnt par = https://www.xiaohongshu.com/user/profile/5a37dd374eacab5e595036d4?channel_type=explore_feed&parent_page_channel_type=web_profile_board&xsec_token=ABYBUYPPLUuCVPG3Ghg7Lu4P1QNbJ-v8aicupHAUj7QKY=&xsec_source=pc_feed
 
 /**
  *   获取所有的id
  */
 const listId = ref([])	// 所有的id
 const getListId = async () => {
+
+	// 执行一遍就获取到token(避免过期)
+	let token = axios.get("/xhs")
+
 	loading.value = true
 	let listIds = await axios.get("/mock/getList")
 	listId.value = listIds.data
@@ -52,6 +56,7 @@ const getNotes = async () => {
 
 			// 每个用户的笔记合集(小红书会返回每个用户的笔记合集前6个)
 			let note = json.profile?.noteData ?? json?.user?.notes?.[0] ?? []
+			console.log(note,'--note');
 			if (note.length) {
 				notesData.value = notesData.value.concat(note)
 				loading.value = false
@@ -71,7 +76,6 @@ onMounted(() => {
 	getListId()
 })
 
-const pic = 'https://pic1.imgdb.cn/item/67b5a56cd0e0a243d400c644.jpg'
 </script>
 
 <template>

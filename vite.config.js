@@ -62,6 +62,6 @@ export default defineConfig({
 				rewrite: (path) => path.replace('/xhs', '')
 			}
 		},
-		allowedHosts: ['413wwtle-mb1127fq-otjtk2ha4faw.vcb4.mcprev.cn']
+		allowedHosts: ['c0umu4xs-hnwq4aq5-8gsnfbg3tby8.vcb4.mcprev.cn']
 	}
 })
