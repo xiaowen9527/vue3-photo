@@ -27,7 +27,6 @@
         loading.value = true
         let listIds = await axios.get("/mock/getList")
         listId.value = listIds.data
-        console.log(listId.value, '------listId-----');
 
         refreshing.value = false
         notesData.value = []
@@ -40,7 +39,7 @@
      */
     const notesData = ref([])	// 所有的笔记合集
     const currIndex = ref(0)	// 当前显示的id下标(页码)
-    const count = ref(4)	// 每次显示笔记用户的id数量
+    const count = ref(2)	// 每次显示笔记用户的id数量
     const getNotes = async () => {
         loading.value = true
         let listIds = listId.value.slice(currIndex.value * count.value, (currIndex.value + 1) * count.value)
@@ -68,13 +67,18 @@
                 // 当前页几个用户id都循环走完接口了
                 if (i == count.value - 1) {
                     loading.value = false
-                    list.forEach((item, index) => {
+                    console.log(list);
+
+                    let lists = shuffleArray(list)
+
+                    lists.forEach((item, index) => {
                         let noteCard = item.noteCard
                         let obj = {}
 
                         if (noteCard?.xsecToken) {
                             obj = ({
                                 cover: noteCard.cover.urlDefault,
+                                type: noteCard.cover.type,
                                 title: noteCard.displayTitle,
                                 avatar: noteCard.user.avatar,
                                 userid: e
@@ -83,13 +87,12 @@
                             obj = ({
                                 cover: item.cover.url,
                                 title: item.title,
+                                type: item.type,
                                 avatar: item.user.image,
                                 id: item.id,
                                 userid: e
                             })
                         }
-                        console.log(obj,'--obj');
-                        
                         notesData.value.push(obj)
                     })
                 }
@@ -102,6 +105,17 @@
             }
         }
     }
+    // 洗牌发打乱数组
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            // 生成一个 0 到 i 之间的随机整数
+            const j = Math.floor(Math.random() * (i + 1));
+            // 交换 array[i] 和 array[j] 的位置
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
 
     /**
      * 下拉刷新
@@ -113,31 +127,16 @@
         // 重新加载数据
         // 将 loading 设置为 true，表示处于加载状态
         loading.value = true;
-        onLoad();
+        getListId();
     };
 
     onMounted(() => {
-         getListId()
+        getListId()
     })
 </script>
 
 <template>
     <!-- 骨架屏加载中 -->
-    <!-- <van-skeleton v-if="!notesData.length">
-        <template #template>
-            <div class="caontainer skeleton-container">
-                <div class="skeleton-item" v-for="(item, i) in 3" :key="i">
-                    <div class="skeleton-item-img">
-                        <van-skeleton-image class="skeleton-img" />
-                    </div>
-                    <van-skeleton-paragraph class="skeleton-item-tle" />
-                </div>
-            </div>
-        </template>
-    </van-skeleton>
-
-    <section class="container list" v-else>
-         -->
     <section class="container list">
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
             <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" :immediate-check="false"
@@ -145,7 +144,9 @@
                 <!-- <div class="item" style="width: 50%;" v-for="item in notesData" :key="item">{{ item }}</div> -->
                 <div class="item" v-for="(item, i) in notesData" :key="i">
                     <div class="item-img">
-                        <img class="item-pic" :src="item.cover" />
+                        <!-- <img class="item-pic" :src="item.cover" /> -->
+                        <van-icon class="video-icon" name="play-circle-o" size="24" color="#fff" v-if="item.type=='video'" />
+
                     </div>
                     <div class="user">
                         <img class="user-avatar" :src="item.avatar" />
@@ -158,52 +159,13 @@
 </template>
 
 <style lang='scss' scoped>
-    .van-skeleton {
-        padding: 12px;
-        box-sizing: border-box;
-        .skeleton-container {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            overflow: hidden;
-            overflow-y: scroll;
-
-            .skeleton-item {
-                height: 268px;
-                width: 43vw;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-
-                .skeleton-item-img {
-                    width: 100%;
-                    height: 226px;
-                    background-color: #ccc;
-
-                    .skeleton-img {
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                    }
-                }
-
-                .skeleton-item-tle {
-                    height: 30px;
-                    margin: 12px 0 0;
-                }
-            }
-        }
-    }
-
     .list {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
         overflow: hidden;
         overflow-y: scroll;
-        padding: 12px;
-        box-sizing: border-box;
+
         .van-pull-refresh {
             width: 100%;
 
@@ -211,17 +173,16 @@
                 display: flex;
                 flex-direction: row;
                 flex-wrap: wrap;
-                justify-content: space-between;
+                justify-content: space-evenly;
 
                 .item {
-                    width: 44vw;
+                    width: 46vw;
                     display: flex;
                     flex-direction: column;
-                    align-items: sp;
-
-                    &:nth-of-type(odd) {
-                        margin-right: 10px;
-                    }
+                    align-items: center;
+                    background: rgba($color: #000000, $alpha: 0.3);
+                    margin-top: 2vw;
+                    position: relative;
 
                     .item-img {
                         min-height: 226px;
@@ -238,13 +199,20 @@
                         }
                     }
 
+                    .video-icon {
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                    }
+
                     .user {
                         display: flex;
                         flex-direction: row;
                         align-items: center;
-                        width: 44vw;
+                        width: 100%;
                         height: 40px;
                         box-sizing: border-box;
+                        background: #fff;
 
                         .user-avatar {
                             display: block;
@@ -280,8 +248,9 @@
                     }
 
                 }
-                &::v-deep(){
-                    .van-list__loading{
+
+                &::v-deep() {
+                    .van-list__loading {
                         width: 100%;
                         display: flex;
                         justify-content: center;
