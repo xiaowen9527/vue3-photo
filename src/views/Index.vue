@@ -144,7 +144,7 @@
                 <!-- <div class="item" style="width: 50%;" v-for="item in notesData" :key="item">{{ item }}</div> -->
                 <div class="item" v-for="(item, i) in notesData" :key="i">
                     <div class="item-img">
-                        <!-- <img class="item-pic" :src="item.cover" /> -->
+                        <img class="item-pic" :src="item.cover" />
                         <van-icon class="video-icon" name="play-circle-o" size="24" color="#fff" v-if="item.type=='video'" />
 
                     </div>
