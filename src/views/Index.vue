@@ -88,6 +88,8 @@
                                 userid: e
                             })
                         }
+                        console.log(obj,'--obj');
+                        
                         notesData.value.push(obj)
                     })
                 }
@@ -115,13 +117,13 @@
     };
 
     onMounted(() => {
-        // getListId()
+         getListId()
     })
 </script>
 
 <template>
     <!-- 骨架屏加载中 -->
-    <van-skeleton v-if="!notesData.length">
+    <!-- <van-skeleton v-if="!notesData.length">
         <template #template>
             <div class="caontainer skeleton-container">
                 <div class="skeleton-item" v-for="(item, i) in 3" :key="i">
@@ -135,6 +137,8 @@
     </van-skeleton>
 
     <section class="container list" v-else>
+         -->
+    <section class="container list">
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
             <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" :immediate-check="false"
                 @load="getNotes">
@@ -167,7 +171,7 @@
 
             .skeleton-item {
                 height: 268px;
-                width: 170px;
+                width: 43vw;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -207,13 +211,13 @@
                 display: flex;
                 flex-direction: row;
                 flex-wrap: wrap;
-                justify-content: center;
+                justify-content: space-between;
 
                 .item {
-                    width: 170px;
+                    width: 44vw;
                     display: flex;
                     flex-direction: column;
-                    align-items: center;
+                    align-items: sp;
 
                     &:nth-of-type(odd) {
                         margin-right: 10px;
@@ -238,7 +242,7 @@
                         display: flex;
                         flex-direction: row;
                         align-items: center;
-                        width: 170px;
+                        width: 44vw;
                         height: 40px;
                         box-sizing: border-box;
 
@@ -275,6 +279,13 @@
                         }
                     }
 
+                }
+                &::v-deep(){
+                    .van-list__loading{
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                    }
                 }
             }
 
