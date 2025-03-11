@@ -13,6 +13,7 @@
     // 下拉刷新状态
     const refreshing = ref(false);
     // 获取笔记合集的拼接参数
+    const mock = 'https://apifoxmock.com/m1/5835688-5521372-default'
     const params = '?xsec_token=ABT7hRcLlGk-rZAIX1JnYYRvGmVEDMi0Txvx3m3ModAA8=&xsec_source=pc_feed'
 
     /**
@@ -145,7 +146,8 @@
                 <div class="item" v-for="(item, i) in notesData" :key="i">
                     <div class="item-img">
                         <img class="item-pic" :src="item.cover" />
-                        <van-icon class="video-icon" name="play-circle-o" size="24" color="#fff" v-if="item.type=='video'" />
+                        <van-icon class="video-icon" name="play-circle-o" size="24" color="#fff"
+                            v-if="item.type == 'video'" />
 
                     </div>
                     <div class="user">
@@ -180,7 +182,6 @@
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    background: rgba($color: #000000, $alpha: 0.3);
                     margin-top: 2vw;
                     position: relative;
 

@@ -11,6 +11,8 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
     config => {
+        console.log(config,'--config');
+        
         config.headers['Authorization'] = localStorage.getItem("token") || '';
 
         // post改变 Content-Type 的值 ， 序列化请求参数
