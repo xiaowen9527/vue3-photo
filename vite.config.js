@@ -56,11 +56,11 @@ export default defineConfig({
 				changeOrigin: true,
 				rewrite: (path) => path.replace('/mock', '')
 			},
-			'/xhs': {
-				target: 'https://www.xiaohongshu.com/',//对面接口
-				changeOrigin: true,
-				rewrite: (path) => path.replace('/xhs', '')
-			}
+			// '/xhs': {
+			// 	target: 'https://www.xiaohongshu.com/',//对面接口
+			// 	changeOrigin: true,
+			// 	rewrite: (path) => path.replace('/xhs', '')
+			// }
 		},
 		allowedHosts: ['c0umu4xs-hnwq4aq5-8gsnfbg3tby8.vcb4.mcprev.cn']
 	}

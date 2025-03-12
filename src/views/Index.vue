@@ -15,7 +15,7 @@
     // 获取笔记合集的拼接参数
     const mock = 'https://apifoxmock.com/m1/5835688-5521372-default'
     const params = '?xsec_token=ABT7hRcLlGk-rZAIX1JnYYRvGmVEDMi0Txvx3m3ModAA8=&xsec_source=pc_feed'
-
+    const xhs = "http://www.xiaohongshu.com"
     /**
      *   获取所有的id
      */
@@ -23,7 +23,7 @@
     const getListId = async () => {
 
         // 执行一遍就获取到token(避免过期)
-        let token = axios.get("/xhs")
+        let token = axios.get(xhs)
 
         loading.value = true
         let listIds = await axios.get("/mock/getList")
@@ -55,7 +55,8 @@
         let list = []
         for (let i = 0; i < listIds.length; i++) {
             const e = listIds[i];
-            let d = await axios.get('/xhs/user/profile/' + e + params)
+            // let d = await axios.get('/xhs/user/profile/' + e + params)
+            let d = await axios.get(xhs+'/user/profile/' + e + params)
             if (d.data.length > 10000) {
                 let dd = d.data.split("window.__INITIAL_STATE__=")[1].split('}}<\/script>')
                 let ddd = dd[0] + '}}'

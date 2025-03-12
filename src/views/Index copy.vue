@@ -1,22 +1,21 @@
-<!-- description: index -->
+<!-- description:  -->
 <!-- fileName: Index.vue -->
 <!-- author: iwen(1044803551@qq.com) -->
 
 <script setup>
     import axios from 'axios'
 
-
+    const list = ref([]);
     // 加载中的状态
     const loading = ref(false)
     // 数据全部加载完的状态
     const finished = ref(false);
     // 下拉刷新状态
     const refreshing = ref(false);
-
     // 获取笔记合集的拼接参数
+    const mock = 'https://apifoxmock.com/m1/5835688-5521372-default'
     const params = '?xsec_token=ABT7hRcLlGk-rZAIX1JnYYRvGmVEDMi0Txvx3m3ModAA8=&xsec_source=pc_feed'
-    // cosnt par = https://www.xiaohongshu.com/user/profile/5a37dd374eacab5e595036d4?channel_type=explore_feed&parent_page_channel_type=web_profile_board&xsec_token=ABYBUYPPLUuCVPG3Ghg7Lu4P1QNbJ-v8aicupHAUj7QKY=&xsec_source=pc_feed
-
+    const xhs = "http://www.xiaohongshu.com"
     /**
      *   获取所有的id
      */
@@ -24,13 +23,14 @@
     const getListId = async () => {
 
         // 执行一遍就获取到token(避免过期)
-        let token = axios.get("/xhs")
+        let token = axios.get(xhs)
 
         loading.value = true
         let listIds = await axios.get("/mock/getList")
         listId.value = listIds.data
+
         refreshing.value = false
-        notesDatas.value = []
+        notesData.value = []
         getNotes()
     }
 
@@ -38,19 +38,25 @@
      *  获取每个用户的笔记合集
      * @param {*} e String 用户id
      */
-    const notesDatas = ref([])	// 所有的笔记合集
+    const notesData = ref([])	// 所有的笔记合集
     const currIndex = ref(0)	// 当前显示的id下标(页码)
-    const count = ref(4)	// 每次显示笔记用户的id数量
-    const notesData = ref([])	// 当前页的笔记合集
+    const count = ref(2)	// 每次显示笔记用户的id数量
     const getNotes = async () => {
-
         loading.value = true
-        let listIds = listId.value.slice(currIndex.value, count.value)
+        let listIds = listId.value.slice(currIndex.value * count.value, (currIndex.value + 1) * count.value)
+        console.log(currIndex.value * count.value, (currIndex.value + 1) * count.value)
 
-        notesData.value = []
+        if (currIndex.value * count.value >= listId.value.length) {
+            console.log('没有下一页了');
+            finished.value = true
+            return
+        }
+
+        let list = []
         for (let i = 0; i < listIds.length; i++) {
             const e = listIds[i];
-            let d = await axios.get('/xhs/user/profile/' + e + params)
+            // let d = await axios.get('/xhs/user/profile/' + e + params)
+            let d = await axios.get(xhs+'/user/profile/' + e + params)
             if (d.data.length > 10000) {
                 let dd = d.data.split("window.__INITIAL_STATE__=")[1].split('}}<\/script>')
                 let ddd = dd[0] + '}}'
@@ -58,18 +64,23 @@
 
                 // 每个用户的笔记合集(小红书会返回每个用户的笔记合集前6个)
                 let note = json.profile?.noteData ?? json?.user?.notes?.[0] ?? []
-                notesData.value = notesData.value.concat(note)
+                list = list.concat(note)
 
                 // 当前页几个用户id都循环走完接口了
                 if (i == count.value - 1) {
                     loading.value = false
-                    notesData.value.forEach((item, index) => {
+                    console.log(list);
+
+                    let lists = shuffleArray(list)
+
+                    lists.forEach((item, index) => {
                         let noteCard = item.noteCard
                         let obj = {}
 
                         if (noteCard?.xsecToken) {
                             obj = ({
                                 cover: noteCard.cover.urlDefault,
+                                type: noteCard.cover.type,
                                 title: noteCard.displayTitle,
                                 avatar: noteCard.user.avatar,
                                 userid: e
@@ -78,108 +89,79 @@
                             obj = ({
                                 cover: item.cover.url,
                                 title: item.title,
+                                type: item.type,
                                 avatar: item.user.image,
                                 id: item.id,
                                 userid: e
                             })
                         }
-                        notesDatas.value.push(obj)
+                        notesData.value.push(obj)
                     })
-
-                    console.log(notesData.value, '数据得长度');
-
                 }
+            }
 
-
-                // 判断是否全部加载完了
-                if (notesDatas.value.length == (currIndex.value + 1) * count.value * 6) {
-                    console.log(notesDatas.value.length, '数据得长度111');
-                    console.log((currIndex.value + 1) * count.value * 6, '数据得长度222');
-                    finished.value = true
-                } else {
-                    currIndex.value += 1
-                }
-
+            // 判断当前次是否全部加载完了.是否翻页
+            if (i == listIds.length - 1) {
+                // 翻页
+                currIndex.value += 1
             }
         }
     }
+    // 洗牌发打乱数组
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            // 生成一个 0 到 i 之间的随机整数
+            const j = Math.floor(Math.random() * (i + 1));
+            // 交换 array[i] 和 array[j] 的位置
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+
+    /**
+     * 下拉刷新
+     */
+    const onRefresh = () => {
+        // 清空列表数据
+        finished.value = false;
+
+        // 重新加载数据
+        // 将 loading 设置为 true，表示处于加载状态
+        loading.value = true;
+        getListId();
+    };
 
     onMounted(() => {
         getListId()
     })
-
 </script>
 
 <template>
     <!-- 骨架屏加载中 -->
-    <van-skeleton v-if="!notesDatas.length">
-        <template #template>
-            <div class="caontainer skeleton-container">
-                <div class="item" v-for="(item, i) in 10" :key="i">
+    <section class="container list">
+        <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+            <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" :immediate-check="false"
+                @load="getNotes">
+                <!-- <div class="item" style="width: 50%;" v-for="item in notesData" :key="item">{{ item }}</div> -->
+                <div class="item" v-for="(item, i) in notesData" :key="i">
                     <div class="item-img">
-                        <van-skeleton-image class="skeleton-img" />
-                    </div>
-                    <van-skeleton-paragraph class="item-tle" />
-                </div>
-            </div>
-        </template>
-    </van-skeleton>
+                        <img class="item-pic" :src="item.cover" />
+                        <van-icon class="video-icon" name="play-circle-o" size="24" color="#fff"
+                            v-if="item.type == 'video'" />
 
-    <!-- 显示数据 -->
-    <div class="container list" v-else>
-        <van-list :loading="loading" :finished="finished" finished-text="没有更多了" @load="getNotes">
-            <div class="item" v-for="(item, i) in notesDatas" :key="i">
-                <div class="item-img">
-                    <!-- <img class="item-img" :src="item.cover" /> -->
+                    </div>
+                    <div class="user">
+                        <img class="user-avatar" :src="item.avatar" />
+                        <span class="item-tle">{{ item.title }}</span>
+                    </div>
                 </div>
-                <div class="user">
-                    <!-- <img class="user-avatar" :src="item.avatar" /> -->
-                    <span class="item-tle">{{ item.title }}</span>
-                </div>
-            </div>
-        </van-list>
-    </div>
+            </van-list>
+        </van-pull-refresh>
+    </section>
 </template>
 
 <style lang='scss' scoped>
-    .van-skeleton {
-        .skeleton-container {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            overflow: hidden;
-            overflow-y: scroll;
-
-            .item {
-                height: 256px;
-                width: 170px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                margin-top: 12px;
-
-                .item-img {
-                    width: 100%;
-                    height: 226px;
-                    background-color: #ccc;
-
-                    .skeleton-img {
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                    }
-                }
-
-                .item-tle {
-                    height: 30px;
-                    margin-top: 12px;
-                }
-            }
-        }
-    }
-
-
     .list {
         display: flex;
         flex-wrap: wrap;
@@ -194,28 +176,45 @@
                 display: flex;
                 flex-direction: row;
                 flex-wrap: wrap;
-                justify-content: space-between;
+                justify-content: space-evenly;
 
                 .item {
-                    width: 170px;
+                    width: 46vw;
                     display: flex;
-                    height: 226px;
                     flex-direction: column;
                     align-items: center;
+                    margin-top: 2vw;
+                    position: relative;
 
                     .item-img {
-                        height: 226px;
+                        min-height: 226px;
                         width: 100%;
-                        background-color: #ccc;
+                        flex: 1;
+                        display: flex;
+                        align-items: center;
+
+                        .item-pic {
+                            display: block;
+                            min-height: 226px;
+                            width: 100%;
+                            height: auto;
+                        }
+                    }
+
+                    .video-icon {
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
                     }
 
                     .user {
                         display: flex;
                         flex-direction: row;
                         align-items: center;
-                        width: 170px;
+                        width: 100%;
                         height: 40px;
                         box-sizing: border-box;
+                        background: #fff;
 
                         .user-avatar {
                             display: block;
@@ -230,6 +229,7 @@
                             font-size: 14px;
                             color: #333;
                             display: flex;
+                            margin-right: 10px;
                             flex: 1;
                             justify-content: center;
                             align-items: center;
@@ -251,9 +251,15 @@
 
                 }
 
-                	}
+                &::v-deep() {
+                    .van-list__loading {
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                    }
                 }
-
-
             }
-        </style>
+
+        }
+    }
+</style>
