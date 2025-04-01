@@ -52,10 +52,15 @@ export default defineConfig({
 		cors: true, // 允许跨域
 		proxy: {
 			'/mock': {
-				target: 'https://apifoxmock.com/m1/5835688-5521372-default/',//对面接口
+				target: 'https://m1.apifoxmock.com/m2/6131214-5822933-default/',//对面接口
 				changeOrigin: true,
 				rewrite: (path) => path.replace('/mock', '')
 			},
+			// '/mock': {
+			// 	target: 'https://apifoxmock.com/m1/5835688-5521372-default/',//对面接口
+			// 	changeOrigin: true,
+			// 	rewrite: (path) => path.replace('/mock', '')
+			// },
 			'/xhs': {
 				target: 'https://www.xiaohongshu.com/',//对面接口
 				changeOrigin: true,

@@ -23,7 +23,8 @@
     const getListId = async () => {
 
         // 执行一遍就获取到token(避免过期)
-        let token = axios.get(xhs)
+        let token = axios.get('/xhs')
+        // let token = axios.get(xhs)
 
         loading.value = true
         let listIds = await axios.get("/mock/getList")
@@ -52,15 +53,23 @@
             return
         }
 
+        // let d = await axios.get('/anttoolbox/p/api/webpage_scraper/fetch_html?url=www.xiaohongshu.com')
+        // console.log(d,'----ddds');
+        // return
+
         let list = []
         for (let i = 0; i < listIds.length; i++) {
             const e = listIds[i];
-            // let d = await axios.get('/xhs/user/profile/' + e + params)
-            let d = await axios.get(xhs+'/user/profile/' + e + params)
+            let d = await axios.get('/xhs/user/profile/' + e + params)
+            console.log(d,'---d');
+            
+            // let d = await axios.get(xhs+'/user/profile/' + e + params)
             if (d.data.length > 10000) {
                 let dd = d.data.split("window.__INITIAL_STATE__=")[1].split('}}<\/script>')
                 let ddd = dd[0] + '}}'
                 let json = eval("(" + ddd + ")");
+
+                console.log(dd,'--jkl');
 
                 // 每个用户的笔记合集(小红书会返回每个用户的笔记合集前6个)
                 let note = json.profile?.noteData ?? json?.user?.notes?.[0] ?? []
@@ -143,7 +152,6 @@
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
             <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" :immediate-check="false"
                 @load="getNotes">
-                <!-- <div class="item" style="width: 50%;" v-for="item in notesData" :key="item">{{ item }}</div> -->
                 <div class="item" v-for="(item, i) in notesData" :key="i">
                     <div class="item-img">
                         <img class="item-pic" :src="item.cover" />
